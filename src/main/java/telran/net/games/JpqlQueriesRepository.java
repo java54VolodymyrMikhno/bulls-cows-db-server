@@ -70,6 +70,23 @@ public class JpqlQueriesRepository {
 	    );
 	    return query.setParameter("movesLimit", movesLimit).getResultList();
 	}
-	
+	public List<String> getGamersWithLessThanMovesInGame(int movesLimit) {
+	    TypedQuery<String> query = em.createQuery(
+	        "select distinct gameGamer.gamer.id from Move group by gameGamer.game.id,"
+	        + "gameGamer.gamer.id having count(*) < :movesLimit",
+	        String.class
+	    );
+	    return query.setParameter("movesLimit", movesLimit).getResultList();
+	}
+	public List<GameAverageMoves> getAverageMovesPerGamerByGame() {
+	    TypedQuery<GameAverageMoves> query = em.createQuery(
+	        "select gameId , round(avg(moves), 1) as averageMoves from (" +
+	        "select gameGamer.game.id as gameId, gameGamer.gamer.username as gamerId, count(*) as moves " +
+	        "from  Move  group by gameId, gamerId order by gameId)" +
+	        "group by gameId",
+	        GameAverageMoves.class
+	    );
+	    return query.getResultList();
+	}
 
 }

@@ -26,11 +26,19 @@ public class InitialAppl {
 //		List<Integer> list =
 //				repository.getBullsInMovesGamersBornAfter(LocalDate.ofYearDay(2000, 1));
 //		displayResult(list);
-		List<MinMaxAmount> list = 
-				repository.getDistributionGamesMoves(6);
-		displayResult(list);
+//		List<MinMaxAmount> list = 
+//				repository.getDistributionGamesMoves(6);
+//		displayResult(list);
 
+//		List<Game> result = repository.getGamesWithAverageGamerAgeGreater(60);
+		List<GameWinnerMoves> result = repository.getGamesWithWinnerMovesLess(60);
+
+		displayResult(result);
 	}
+		
+	
+	
+		
 
 	private static <T >void displayResult(List<T> list) {
 		list.forEach(System.out::println);

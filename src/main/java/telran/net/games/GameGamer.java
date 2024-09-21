@@ -36,5 +36,9 @@ public class GameGamer {
 		this.gamer = gamer;
 	}
 	
+	public void setwinner (boolean iswinner) {
+		this.isWinner = iswinner;
+	}
+	
 
 }

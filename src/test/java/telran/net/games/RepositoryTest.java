@@ -59,40 +59,40 @@ public class RepositoryTest {
 		repository.setStartDate(gameId, LocalDateTime.now());
 		assertTrue(repository.isGameStarted(gameId));
 	}
-//	
-//	@Order(6)
-//	@Test
-//	void createGameGamerMoveAllGameGamersMovesTest() {
-//		repository.createGameGamerMove(new MoveDto(gameId, gamerUsername, "1243", 2, 2));
-//		repository.createGameGamerMove(new MoveDto(gameId, gamerUsername, "1234", 4, 0));
-//		
-//		List<MoveData> moves = repository.getAllGameGamerMoves(gameId, gamerUsername);
-//		assertEquals(new MoveData("1243", 2, 2), moves.get(0));
-//		assertEquals(new MoveData("1234", 4, 0), moves.get(1));
-//	}
-//	@Order(7)
-//	@Test
-//	void isGameFinishedTest() {
-//		assertFalse(repository.isGameFinished(gameId));
-//	}
-//	@Order(8)
-//	@Test
-//	void setIsFinishedTest() {
-//		repository.setIsFinished(gameId);
-//		assertTrue(repository.isGameFinished(gameId));
-//	}
-//	@Order(9)
-//	@Test
-//	void isWinnerTest() {
-//		assertFalse(repository.isWinner(gameId, gamerUsername));
-//	}
-//	@Order(10)
-//	@Test
-//	void setWinnerTest() {
-//		repository.setWinner(gameId, gamerUsername);
-//		assertTrue(repository.isWinner(gameId, gamerUsername));
-//	}
-//	
+	
+	@Order(6)
+	@Test
+	void createGameGamerMoveAllGameGamersMovesTest() {
+		repository.createGameGamerMove(new MoveDto(gameId, gamerUsername, "1243", 2, 2));
+		repository.createGameGamerMove(new MoveDto(gameId, gamerUsername, "1234", 4, 0));
+		
+		List<MoveData> moves = repository.getAllGameGamerMoves(gameId, gamerUsername);
+		assertEquals(new MoveData("1243", 2, 2), moves.get(0));
+		assertEquals(new MoveData("1234", 4, 0), moves.get(1));
+	}
+	@Order(7)
+	@Test
+	void isGameFinishedTest() {
+		assertFalse(repository.isGameFinished(gameId));
+	}
+	@Order(8)
+	@Test
+	void setIsFinishedTest() {
+		repository.setIsFinished(gameId);
+		assertTrue(repository.isGameFinished(gameId));
+	}
+	@Order(9)
+	@Test
+	void isWinnerTest() {
+		assertFalse(repository.isWinner(gameId, gamerUsername));
+	}
+	@Order(10)
+	@Test
+	void setWinnerTest() {
+		repository.setWinner(gameId, gamerUsername);
+		assertTrue(repository.isWinner(gameId, gamerUsername));
+	}
+	
 
 
 }

@@ -31,9 +31,9 @@ public class InitialAppl {
 //		displayResult(list);
 
 //		List<Game> result = repository.getGamesWithAverageGamerAgeGreater(60);
-//		List<GameWinnerMoves> result = repository.getGamesWithWinnerMovesLess(60);
+		List<GameWinnerMoves> result = repository.getGamesWithWinnerMovesLess(60);
 //		List<String> result = repository.getGamersWithLessThanMovesInGame(4);
-		List<GameAverageMoves> result = repository.getAverageMovesPerGamerByGame();
+//		List<GameAverageMoves> result = repository.getAverageMovesPerGamerByGame();
 
 		displayResult(result);
 	}

@@ -51,10 +51,9 @@ public class JpqlQueriesRepository {
 	}
 	public List<Game> getGamesWithAverageGamerAgeGreater(int age) {
 	    TypedQuery<Game> query = em.createQuery(
-	        "select game from Game game where game.id in (" +
-	        "select gameGamer.game.id from GameGamer gameGamer " +
-	        "join Gamer gamer on gameGamer.gamer.username = gamer.username " +
-	        "group by gameGamer.game.id " +
+	        "select g from Game g where id in (" +
+	        "select game.id from GameGamer " +
+	        "group by game.id " +
 	        "having avg(extract(year from current_date) - extract(year from gamer.birthdate)) > :age)",
 	        Game.class
 	    );
@@ -63,7 +62,7 @@ public class JpqlQueriesRepository {
 	
 	public List<GameWinnerMoves> getGamesWithWinnerMovesLess(int movesLimit) {
 	    TypedQuery<GameWinnerMoves> query = em.createQuery(
-	        "select gameGamer.game.id , count(*)  from Move move " +
+	        "select gameGamer.game.id , count(*)  from Move " +
 	        "where gameGamer.is_winner " +
 	        "group by gameGamer.game.id having count(*) < :movesLimit",
 	        GameWinnerMoves.class

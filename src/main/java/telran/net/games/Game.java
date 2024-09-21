@@ -10,7 +10,7 @@ public class Game {
 @Id
 private Long id;
 private LocalDate date;
-private Boolean isFinished;
+private Boolean is_finished;
 private String sequence;
 
 public Game() {
@@ -19,7 +19,7 @@ public Game() {
 public Game(Long id, LocalDate date, Boolean isFinished, String sequence) {
 	this.id = id;
 	this.date = date;
-	this.isFinished = isFinished;
+	this.is_finished = isFinished;
 	this.sequence = sequence;
 }
 
@@ -30,7 +30,7 @@ public LocalDate getDate() {
 	return date;
 }
 public Boolean getIsFinished() {
-	return isFinished;
+	return is_finished;
 }
 public String getSequence() {
 	return sequence;
@@ -38,7 +38,7 @@ public String getSequence() {
 
 @Override
 public String toString() {
-	return "Game [id=" + id + ", date=" + date + ", isFinished=" + isFinished + ", sequence=" + sequence + "]";
+	return "Game [id=" + id + ", date=" + date + ", isFinished=" + is_finished + ", sequence=" + sequence + "]";
 }
 
 

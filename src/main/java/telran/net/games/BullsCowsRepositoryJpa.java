@@ -152,11 +152,8 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 				"select gg from GameGamer gg where gg.game.id = :id and gg.gamer.username =:username",
 				GameGamer.class);
 		query.setParameter("id", gameId).setParameter("username", username);
-		try {
+		
 			return query.getSingleResult();
-		} catch (Exception e) {
-			throw new GamerNotFoundException(username);
-		}
 	}
 
 	@Override

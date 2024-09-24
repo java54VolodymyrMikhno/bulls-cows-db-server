@@ -11,11 +11,17 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import telran.net.games.entities.Game;
+import telran.net.games.entities.Gamer;
 import telran.net.games.exceptions.GameGamerAlreadyExistsException;
 import telran.net.games.exceptions.GameGamerNotFoundException;
 import telran.net.games.exceptions.GameNotFoundException;
 import telran.net.games.exceptions.GamerAlreadyExistsException;
 import telran.net.games.exceptions.GamerNotFoundException;
+import telran.net.games.model.MoveData;
+import telran.net.games.model.MoveDto;
+import telran.net.games.repo.BullsCowsRepository;
+import telran.net.games.repo.BullsCowsRepositoryJpa;
 
 
 

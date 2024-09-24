@@ -1,4 +1,4 @@
-package telran.net.games;
+package telran.net.games.config;
 
 import java.net.URL;
 import java.util.List;
@@ -80,9 +80,13 @@ public class BullsCowsPersistenceUnitInfo implements PersistenceUnitInfo {
 
 	@Override
 	public List<String> getManagedClassNames() {
-		return List.of("telran.net.games.Gamer", "telran.net.games.Game", "telran.net.games.GameGamer",
-				"telran.net.games.Move");
+		
+		return List.of("telran.net.games.entities.Gamer",
+				"telran.net.games.entities.Game",
+				"telran.net.games.entities.GameGamer",
+				"telran.net.games.entities.Move");
 	}
+
 
 	@Override
 	public boolean excludeUnlistedClasses() {

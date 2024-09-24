@@ -1,12 +1,13 @@
 package telran.net.games;
 import jakarta.persistence.*;
 @Entity
-@Table(name="game_gamer")
+@Table(name="game_gamer",uniqueConstraints =
+{@UniqueConstraint(columnNames = {"game_id", "gamer_id"} )})
 public class GameGamer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Column(name="is_winner",nullable = false)
+	@Column(name="is_winner", nullable = false)
 	private boolean isWinner;
 	@ManyToOne
 	@JoinColumn(name = "game_id")
@@ -17,7 +18,7 @@ public class GameGamer {
 	public long getId() {
 		return id;
 	}
-	public boolean iswinner() {
+	public boolean isWinner() {
 		return isWinner;
 	}
 	public Game getGame() {
@@ -27,18 +28,16 @@ public class GameGamer {
 		return gamer;
 	}
 	public GameGamer() {
-		
+
 	}
-	public GameGamer( boolean isWinner, Game game, Gamer gamer) {
-		
+	public GameGamer(boolean isWinner, Game game, Gamer gamer) {
 		this.isWinner = isWinner;
 		this.game = game;
 		this.gamer = gamer;
 	}
-	
-	public void setwinner (boolean iswinner) {
-		this.isWinner = iswinner;
+	public void setWinner(boolean isWinner) {
+		this.isWinner = isWinner;
 	}
-	
+
 
 }

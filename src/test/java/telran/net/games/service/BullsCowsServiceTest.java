@@ -26,11 +26,13 @@ class BullsCowsServiceTest {
 	static long gameId;
 
 	static {
-		HashMap<String, Object> hibernateProperties = new HashMap<>();
-		hibernateProperties.put("hibernate.hbm2ddl.auto", "create");
-		repository = new BullsCowsRepositoryJpa(new BullsCowsTestPersistenceUnitInfo(), hibernateProperties);
-		BullsCowsGameRunner bcRunner = new BullsCowsGameRunner(N_DIGITS);
-		bcService = new BullsCowsServiceImpl(repository, bcRunner);
+	    HashMap<String, Object> hibernateProperties = new HashMap<>();
+	    hibernateProperties.put("hibernate.hbm2ddl.auto", "create");   
+	    hibernateProperties.put("javax.persistence.jdbc.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+	  
+	    repository = new BullsCowsRepositoryJpa(new BullsCowsTestPersistenceUnitInfo(), hibernateProperties);
+	    BullsCowsGameRunner bcRunner = new BullsCowsGameRunner(N_DIGITS);
+	    bcService = new BullsCowsServiceImpl(repository, bcRunner);
 	}
 
 	@Order(1)

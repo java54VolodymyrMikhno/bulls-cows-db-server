@@ -1,8 +1,7 @@
 package telran.net.games.exceptions;
-
 @SuppressWarnings("serial")
-public class GameFinishedException extends IllegalStateException{
-   public GameFinishedException(long gameId) {
-	super("game "+gameId +" is finished");
-}
+public class GameFinishedException extends IllegalStateException {
+	public GameFinishedException(long gameId) {
+		super("Already Finished game " + gameId);
+	}
 }

@@ -31,6 +31,7 @@ public class RepositoryTest {
 	static {
 		HashMap<String, Object> hibernateProperties = new HashMap<>();
 		hibernateProperties.put("hibernate.hbm2ddl.auto", "create");
+		hibernateProperties.put("javax.persistence.jdbc.url", "jdbc:h2:mem:test");
 		repository = new BullsCowsRepositoryJpa
 				(new BullsCowsTestPersistenceUnitInfo(), hibernateProperties);
 	}

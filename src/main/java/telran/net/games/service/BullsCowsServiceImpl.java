@@ -4,15 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import telran.net.games.entities.Game;
-import telran.net.games.entities.Gamer;
-import telran.net.games.entities.Move;
-import telran.net.games.exceptions.GameAlreadyStartedException;
-import telran.net.games.exceptions.GameFinishedException;
-import telran.net.games.exceptions.GameNotStartedException;
-import telran.net.games.exceptions.GamerAlreadyExistsException;
-import telran.net.games.exceptions.IncorrectMoveSequenceException;
-import telran.net.games.exceptions.NoGamerInGameException;
+import telran.net.games.entities.*;
+import telran.net.games.exceptions.*;
 import telran.net.games.model.MoveData;
 import telran.net.games.model.MoveDto;
 import telran.net.games.repo.BullsCowsRepository;
@@ -32,6 +25,7 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * returns ID of the created game
 	 */
 	public long createGame() {
+		
 		return bcRepository.createNewGame(bcRunner.getRandomSequence());
 	}
 	@Override
@@ -72,11 +66,9 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * GamerNotFoundException
 	 */
 	public void gamerJoinGame(long gameId, String username) {
-		bcRepository.getGame(gameId);
 		if(bcRepository.isGameStarted(gameId)) {
 			throw new GameAlreadyStartedException(gameId);
 		}
-		bcRepository.getGamer(username);
 		bcRepository.createGameGamer(gameId, username);
 		
 	}
@@ -96,34 +88,38 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * in the case of the winner's move the game should be set as finished
 	 * and the gamer in the game should be set as the winner
 	 * Exceptions:
-	 * IncorrectMoveSequenceException
+	 * IncorrectMoveSequenceException (extends IllegalArgumentException)_
 	 * GameNotFoundException
 	 * GamerNotFoundException
-	 * GameNotStartedException
-	 * GameFinishedException
+	 * GameNotStartedException (extends IllegalStateException)
+	 * GameFinishedException (extends IllegalStateException)
 	 */
-	public List<MoveData> moveProcessing(String sequence, long gameId, String username) {
-		Game game = bcRepository.getGame(gameId);
-		if(!bcRunner.checkGuess(sequence)) {
-			throw new IncorrectMoveSequenceException(sequence);
+	public List<MoveData> moveProcessing(String moveSequence, long gameId, String username) {
+		if(!bcRunner.checkGuess(moveSequence)) {
+			throw new WrongMoveException(moveSequence, bcRunner.nDigits);
 		}
 		if (!bcRepository.isGameStarted(gameId)) {
-	        throw new GameNotStartedException(gameId);
-	    }
+			throw new GameNotStartedException(gameId);
+		}
 		if (bcRepository.isGameFinished(gameId)) {
-	        throw new GameFinishedException(gameId);
-	    }
-		
-		
-		bcRepository.getGamer(username);
-		MoveData moveData = bcRunner.moveProcessing(sequence, game.getSequence());
-		MoveDto moveDto = new MoveDto(gameId,username,sequence,moveData.bulls(),moveData.cows());
+			throw new GameFinishedException(gameId);
+		}
+		Game game = bcRepository.getGame(gameId);
+		String toBeGuessedSequence = game.getSequence();
+		MoveData moveData = bcRunner.moveProcessing(moveSequence,
+				toBeGuessedSequence);
+		MoveDto moveDto = new MoveDto(gameId, username, moveSequence,
+				moveData.bulls(), moveData.cows());
 		bcRepository.createGameGamerMove(moveDto);
 		if(bcRunner.checkGameFinished(moveData)) {
-			bcRepository.setWinner(gameId, username);
-			bcRepository.setIsFinished(gameId);
+			finishGame(gameId, username);
 		}
 		return bcRepository.getAllGameGamerMoves(gameId, username);
+	}
+	private void finishGame(long gameId, String username) {
+		bcRepository.setIsFinished(gameId);
+		bcRepository.setWinner(gameId, username);
+		
 	}
 	@Override
 	/**
@@ -132,8 +128,8 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * GameNotFoundException
 	 */
 	public boolean gameOver(long gameId) {
-		Game game = bcRepository.getGame(gameId);
-		return game.isfinished();
+		
+		return bcRepository.isGameFinished(gameId);
 	}
 	@Override
 	/**

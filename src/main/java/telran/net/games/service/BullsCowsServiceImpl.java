@@ -106,8 +106,8 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 		if (bcRepository.isGameFinished(gameId)) {
 			throw new GameFinishedException(gameId);
 		}
-		Game game = bcRepository.getGame(gameId);
-		String toBeGuessedSequence = game.getSequence();
+		
+		String toBeGuessedSequence =getSequence(gameId);
 		MoveData moveData = bcRunner.moveProcessing(moveSequence,
 				toBeGuessedSequence);
 		MoveDto moveDto = new MoveDto(gameId, username, moveSequence,
@@ -144,7 +144,6 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 		return bcRepository.getGameGamers(gameId);
 	}
 	/**
-	 * Only for testing
 	 * Implied that the test class resides at the same package (to access the method)
 	 * 
 	 * @param gameId

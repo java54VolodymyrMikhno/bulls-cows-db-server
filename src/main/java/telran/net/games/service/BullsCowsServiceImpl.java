@@ -64,6 +64,7 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * GameNotFoundException
 	 * GameAlreadyStartedException
 	 * GamerNotFoundException
+	 * GameGamerAlreadyExists
 	 */
 	public void gamerJoinGame(long gameId, String username) {
 		if(bcRepository.isGameStarted(gameId)) {
@@ -89,15 +90,16 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * and the gamer in the game should be set as the winner
 	 * Exceptions:
 	 * IncorrectMoveSequenceException (extends IllegalArgumentException)_
-	 * GameNotFoundException
-	 * GamerNotFoundException
+	 * GameGamerNotFoundException
 	 * GameNotStartedException (extends IllegalStateException)
 	 * GameFinishedException (extends IllegalStateException)
 	 */
 	public List<MoveData> moveProcessing(String moveSequence, long gameId, String username) {
+		
 		if(!bcRunner.checkGuess(moveSequence)) {
-			throw new WrongMoveException(moveSequence, bcRunner.nDigits);
+			throw new IncorrectMoveSequenceException(moveSequence, bcRunner.nDigits);
 		}
+		bcRepository.getGamer(username);//only for checking the gamer exists
 		if (!bcRepository.isGameStarted(gameId)) {
 			throw new GameNotStartedException(gameId);
 		}

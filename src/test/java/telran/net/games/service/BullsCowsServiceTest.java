@@ -142,11 +142,11 @@ class BullsCowsServiceTest {
 	void moveProcessingExceptions() {
 		bcService.gamerJoinGame(gameIdAltFlow, username);
 		bcService.startGame(gameIdAltFlow);
-		assertThrowsExactly(WrongMoveException.class,
+		assertThrowsExactly(IncorrectMoveSequenceException.class,
 				() -> bcService.moveProcessing("1123", gameIdAltFlow, username));
-		assertThrowsExactly(WrongMoveException.class,
+		assertThrowsExactly(IncorrectMoveSequenceException.class,
 				() -> bcService.moveProcessing("123", gameIdAltFlow, username));
-		assertThrowsExactly(WrongMoveException.class,
+		assertThrowsExactly(IncorrectMoveSequenceException.class,
 				() -> bcService.moveProcessing("12345", gameIdAltFlow, username));
 		bcService.moveProcessing(toBeGuessedSequence, gameIdAltFlow, username);
 		assertThrowsExactly(GameFinishedException.class,

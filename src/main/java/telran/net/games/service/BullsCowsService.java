@@ -10,9 +10,9 @@ long createGame();//returns ID of the created game
 List<String> startGame(long gameId); //returns list of user (gamer) names
 void registerGamer(String username, LocalDate birthDate);
 void gamerJoinGame(long gameId, String username);
-void getNotStartedGamesWithGamer(String username);
-void getNotStartedGamesWithNoGamer(String username);
-void getStartedGamesWithGamer(String username);
+List<Long> getNotStartedGamesWithGamer(String username);
+List<Long> getNotStartedGamesWithNoGamer(String username);
+List<Long> getStartedGamesWithGamer(String username);
 List<Long> getNotStartedGames();
 List<MoveData> moveProcessing(String sequence, long gameId, String username);
 boolean gameOver(long gameId);

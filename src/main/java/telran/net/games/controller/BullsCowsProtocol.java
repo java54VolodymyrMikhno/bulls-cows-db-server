@@ -35,6 +35,9 @@ private BullsCowsService bcService;
 			case "registerGamer"-> registerGamer(requestData);
 			case "gamerJoinGame"-> gamerJoinGame(requestData);
 			case "getNotStartedGames"-> getNotStartedGames(requestData);
+			case "getNotStartedGamesWithGamer" -> getNotStartedGamesWithGamer(requestData);
+            case "getNotStartedGamesWithNoGamer" -> getNotStartedGamesWithNoGamer(requestData);
+            case "getStartedGamesWithGamer" -> getStartedGamesWithGamer(requestData);
 			case "moveProcessing"-> moveProcessing(requestData);
 			case "gameOver"-> gameOver(requestData);
 			case "getGameGamers"-> getGameGamers(requestData);
@@ -124,6 +127,25 @@ private <T> String resultsToJSON(List<T> res) {
 		
 		return new Response(ResponseCode.OK,responseString);
 	}
+	private Response getNotStartedGamesWithGamer(String requestData) {
+        String username = requestData;
+        List<Long> notStartedGames = bcService.getNotStartedGamesWithGamer(username);
+        String responseString = resultsToJSON(notStartedGames);
+        return getResponseOk(responseString);
+    }
 
+    private Response getNotStartedGamesWithNoGamer(String requestData) {
+        String username = requestData;
+        List<Long> notStartedGames = bcService.getNotStartedGamesWithNoGamer(username);
+        String responseString = resultsToJSON(notStartedGames);
+        return getResponseOk(responseString);
+    }
+
+    private Response getStartedGamesWithGamer(String requestData) {
+        String username = requestData;
+        List<Long> startedGames = bcService.getStartedGamesWithGamer(username);
+        String responseString = resultsToJSON(startedGames);
+        return getResponseOk(responseString);
+    }
 
 }

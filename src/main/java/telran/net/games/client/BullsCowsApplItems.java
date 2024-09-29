@@ -1,4 +1,4 @@
-package telran.net.games;
+package telran.net.games.client;
 
 import telran.net.games.exceptions.GameNotFoundException;
 import telran.net.games.service.BullsCowsService;
@@ -24,7 +24,8 @@ public class BullsCowsApplItems {
     }
 
     static void loginGamer(InputOutput io) {
-        username = io.readString("Enter your name");
+        String name = io.readString("Enter your name");
+        username= service.loginGamer(name);
         io.writeLine("Logged in " + username);
         showMenuGame(io);
     }
@@ -95,17 +96,15 @@ public class BullsCowsApplItems {
     }
 
     private static void continueGame(InputOutput io) {
-       List<Long> games = service.getNotStartedGamesWithGamer(username);
+       List<Long> games = service.getStartedGamesWithGamer(username);
        if(games.isEmpty()) {
        	io.writeLine(" Available  no games  ");
        }else {
        	io.writeLine(" Available games : ");
            games.forEach(io::writeLine);
            gameId =io.readLong("Enter Game Id","Wrong Game Id");
-           checkNotStartedGame(gameId,games);
-           
+           checkNotStartedGame(gameId,games);   
        }
-        service.startGame(gameId);
         playGame(io);
     }
 

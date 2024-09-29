@@ -168,5 +168,9 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	public List<Long> getStartedGamesWithGamer(String username) {
 	    return bcRepository.getStartedGamesWithGamer(username);
 	}
-	
+	@Override
+	public String loginGamer(String username) {
+		 Gamer gamer = bcRepository.getGamer(username);
+		return gamer.getUsername();
+}
 }

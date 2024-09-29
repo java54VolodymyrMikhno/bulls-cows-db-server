@@ -33,6 +33,7 @@ public class BullsCowsProtocol implements Protocol {
 			case "moveProcessing" -> moveProcessing(requestData);
 			case "gameOver" -> gameOver(requestData);
 			case "getGameGamers" -> getGameGamers(requestData);
+			case "loginGamer" -> loginGamer(requestData);
 			default -> new Response(ResponseCode.WRONG_REQUEST_TYPE,
 					requestType);
 			};
@@ -42,6 +43,11 @@ public class BullsCowsProtocol implements Protocol {
 		}
 		return response;
 	}
+	Response loginGamer(String requestData) {
+		String username = bcService.loginGamer(requestData);
+		return getResponseOk(username);
+	}
+
 	Response getNotStartedGamesWithGamer(String requestData) {
 		List<Long> games = bcService.getNotStartedGamesWithGamer(requestData);
 		String responseString = resultsToJSON(games);
@@ -120,4 +126,5 @@ private <T> String resultsToJSON(List<T> res) {
 		return res.stream().map(T::toString)
 				.collect(Collectors.joining(";"));
 	}
+
 }

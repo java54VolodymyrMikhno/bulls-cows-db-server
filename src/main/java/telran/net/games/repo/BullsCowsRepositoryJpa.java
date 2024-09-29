@@ -192,7 +192,7 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	@Override
 	public List<Long> getStartedGamesWithGamer(String username) {
 		return em.createQuery(
-				"select game.id from GameGamer  where dateTime is "
+				"select game.id from GameGamer  where game.dateTime is "
 				+ "not  null and  not game.isFinished  and  gamer.id = :username",
 				
 				Long.class

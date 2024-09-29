@@ -1,4 +1,4 @@
-package telran.net.games;
+package telran.net.games.client;
 
 import org.json.JSONObject;
 import telran.net.Request;
@@ -8,6 +8,8 @@ import telran.net.games.model.GamerDto;
 import telran.net.games.model.MoveData;
 import telran.net.games.model.SequenceGameGamerDto;
 import telran.net.games.service.BullsCowsService;
+
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,6 +102,12 @@ public class BullsCowsProxy implements BullsCowsService {
 	public List<Long> getStartedGamesWithGamer(String username) {
 		String response = tcpClient.sendAndReceive(new Request("getStartedGamesWithGamer", username));
 		return fromJson(response);
+	}
+
+	@Override
+	public String loginGamer(String username) {
+		return tcpClient.sendAndReceive(new Request("loginGamer", username));
+	
 	}
 
 

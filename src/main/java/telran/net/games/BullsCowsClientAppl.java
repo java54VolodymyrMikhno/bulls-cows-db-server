@@ -1,8 +1,8 @@
 package telran.net.games;
 
 import telran.net.TcpClient;
-
-import telran.net.games.BullsCowsApplItems;
+import telran.net.games.client.BullsCowsApplItems;
+import telran.net.games.client.BullsCowsProxy;
 import telran.net.games.service.BullsCowsService;
 import telran.view.Item;
 import telran.view.Menu;

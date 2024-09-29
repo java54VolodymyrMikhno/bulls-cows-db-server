@@ -94,9 +94,9 @@ private BullsCowsService bcService;
 
 
 	private Response registerGamer(String requestData) {
-		JSONObject jo = new JSONObject(requestData);
-		bcService.registerGamer(jo.getString("username"), LocalDate.parse(jo.getString("birthDate")));
-		String responseString ="Gamer "+ jo.getString("username")+ "registred successfully" ;
+		GamerDto gamer = new GamerDto(new JSONObject(requestData));
+		bcService.registerGamer(gamer.username(),gamer.birthdate());
+		String responseString = "";
 		return getResponseOk(responseString );
 	}
 

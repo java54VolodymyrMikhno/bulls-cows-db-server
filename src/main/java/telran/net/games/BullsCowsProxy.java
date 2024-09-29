@@ -1,100 +1,96 @@
 package telran.net.games;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
 import org.json.JSONObject;
-
 import telran.net.Request;
 import telran.net.TcpClient;
-import telran.net.games.model.MoveData;
 import telran.net.games.model.GameGamerDto;
+import telran.net.games.model.GamerDto;
+import telran.net.games.model.MoveData;
 import telran.net.games.model.SequenceGameGamerDto;
 import telran.net.games.service.BullsCowsService;
 
-public class BullCowsProxy implements BullsCowsService {
-    private final TcpClient tcpClient;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
-    public BullCowsProxy(TcpClient tcpClient) {
+public class BullsCowsProxy implements BullsCowsService {
+    TcpClient tcpClient;
+
+    public BullsCowsProxy(TcpClient tcpClient) {
         this.tcpClient = tcpClient;
     }
 
     @Override
     public long createGame() {
-        String response = tcpClient.sendAndReceive(new Request("createGame", ""));
+        String response = tcpClient.sendAndReceive(new Request("create game", ""));
         return Long.parseLong(response);
     }
 
     @Override
     public List<String> startGame(long gameId) {
-        String response = tcpClient.sendAndReceive(new Request("startGame", String.valueOf(gameId)));
-        return Arrays.asList(response.split(";"));
+        String response = tcpClient.sendAndReceive(new Request("startGame",Long.toString(gameId)));
+        return List.of(response.split(";"));
     }
 
     @Override
     public void registerGamer(String username, LocalDate birthDate) {
-        JSONObject json = new JSONObject();
-        json.put("username", username);
-        json.put("birthDate", birthDate.toString());
-        tcpClient.sendAndReceive(new Request("registerGamer", json.toString()));
+        tcpClient.sendAndReceive
+                (new Request("registerGamer",new GamerDto(username,birthDate).toString()));
     }
 
     @Override
     public void gamerJoinGame(long gameId, String username) {
-        GameGamerDto gameGamerDto = new GameGamerDto(gameId, username);
-        tcpClient.sendAndReceive(new Request("gamerJoinGame", gameGamerDto.toString()));
-    }
-
-    @Override
-    public List<Long> getNotStartedGamesWithGamer(String username) {
-        String response = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithGamer", username));
-        return parseLongList(response);
-    }
-
-    @Override
-    public List<Long> getNotStartedGamesWithNoGamer(String username) {
-        String response = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithNoGamer", username));
-        return parseLongList(response);
-    }
-
-    @Override
-    public List<Long> getStartedGamesWithGamer(String username) {
-        String response = tcpClient.sendAndReceive(new Request("getStartedGamesWithGamer", username));
-        return parseLongList(response);
+        tcpClient.sendAndReceive
+                (new Request("gamerJoinGame",new GameGamerDto(gameId,username).toString()));
     }
 
     @Override
     public List<Long> getNotStartedGames() {
-        String response = tcpClient.sendAndReceive(new Request("getNotStartedGames", ""));
-        return parseLongList(response);
+        String response =
+                tcpClient.sendAndReceive(new Request("getNotStartedGames",""));
+        return List.of(Long.parseLong(Arrays.toString(response.split(";"))));
     }
 
     @Override
     public List<MoveData> moveProcessing(String sequence, long gameId, String username) {
-        SequenceGameGamerDto sggd = new SequenceGameGamerDto(sequence, gameId, username);
-        String response = tcpClient.sendAndReceive(new Request("moveProcessing", sggd.toString()));
-        return Arrays.stream(response.split(";"))
-                .map(s -> new MoveData(new JSONObject(s)))
+        String response =
+                tcpClient.sendAndReceive
+                        (new Request("moveProcessing",new SequenceGameGamerDto(sequence,gameId,username).toString()));
+        return Stream.of(response.split(";"))
+                .map(str -> new MoveData(new JSONObject(str)))
                 .toList();
     }
 
     @Override
     public boolean gameOver(long gameId) {
-        String response = tcpClient.sendAndReceive(new Request("gameOver", String.valueOf(gameId)));
+        String response =
+                tcpClient.sendAndReceive(new Request("gameOver",Long.toString(gameId)));
         return Boolean.parseBoolean(response);
     }
 
     @Override
     public List<String> getGameGamers(long gameId) {
-        String response = tcpClient.sendAndReceive(new Request("getGameGamers", String.valueOf(gameId)));
-        return Arrays.asList(response.split(";"));
+        String response =
+                tcpClient.sendAndReceive(new Request("getGameGamers",Long.toString(gameId)));
+        return List.of(response.split(";"));
     }
 
-   
-    private List<Long> parseLongList(String response) {
-        return Arrays.stream(response.split(";"))
-                .map(Long::parseLong)
-                .toList();
-    }
+	@Override
+	public List<Long> getNotStartedGamesWithGamer(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Long> getNotStartedGamesWithNoGamer(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Long> getStartedGamesWithGamer(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

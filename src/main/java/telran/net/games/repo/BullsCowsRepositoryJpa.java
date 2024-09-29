@@ -118,7 +118,7 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	@Override
 	public List<String> getGameGamers(long id) {
 		TypedQuery<String> query = em.createQuery(
-				"select gamer.username from GameGamer where game.id=?1",
+				"select gamer.username from GameGamer  where game.id=?1",
 				String.class);
 		return query.setParameter(1, id).getResultList();
 	}
@@ -146,8 +146,8 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	}
 	private GameGamer getGameGamer(Long gameId, String username) {
 		TypedQuery<GameGamer> query = em.createQuery(
-						"select gameGamer from GameGamer gameGamer"
-						+ " where game.id = ?1 and gamer.username = ?2", GameGamer.class);
+						"select username from GameGamer gameGamer"
+						+ " where game.id = ?1 and gamer.id = ?2", GameGamer.class);
 		GameGamer gameGamer = query.setParameter(1, gameId).setParameter(2, username)
 				.getSingleResultOrNull();
 		if(gameGamer == null) {

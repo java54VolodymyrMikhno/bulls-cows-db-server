@@ -11,7 +11,7 @@ public record GameGamerDto(Long gameId, String username) {
 	@Override
 	public String toString() {
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put(GAME_ID_FIELD, gameId.toString());
+		jsonObject.put(GAME_ID_FIELD, gameId);
 		jsonObject.put(USERNAME_FIELD, username);
 		return jsonObject.toString();
 	}

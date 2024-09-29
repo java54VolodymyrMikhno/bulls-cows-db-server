@@ -8,8 +8,8 @@ import telran.net.games.model.GamerDto;
 import telran.net.games.model.MoveData;
 import telran.net.games.model.SequenceGameGamerDto;
 import telran.net.games.service.BullsCowsService;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,7 +23,7 @@ public class BullsCowsProxy implements BullsCowsService {
 
     @Override
     public long createGame() {
-        String response = tcpClient.sendAndReceive(new Request("create game", ""));
+        String response = tcpClient.sendAndReceive(new Request("createGame", ""));
         return Long.parseLong(response);
     }
 
@@ -49,7 +49,7 @@ public class BullsCowsProxy implements BullsCowsService {
     public List<Long> getNotStartedGames() {
         String response =
                 tcpClient.sendAndReceive(new Request("getNotStartedGames",""));
-        return List.of(Long.parseLong(Arrays.toString(response.split(";"))));
+        return fromJson(response);
     }
 
     @Override
@@ -78,19 +78,29 @@ public class BullsCowsProxy implements BullsCowsService {
 
 	@Override
 	public List<Long> getNotStartedGamesWithGamer(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		String response = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithGamer", username));
+		return fromJson(response);
 	}
 
 	@Override
 	public List<Long> getNotStartedGamesWithNoGamer(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		String response = tcpClient.sendAndReceive(new Request("getNotStartedGamesWithNoGamer", username));
+		return fromJson(response);
 	}
 
+	private List<Long> fromJson(String response) {
+	    if (response == null || response.isEmpty()) {
+	        return new ArrayList<>();
+	    }
+	    return Arrays.stream(response.split(";"))
+	            .map(Long::valueOf)
+	            .toList();
+	}
 	@Override
 	public List<Long> getStartedGamesWithGamer(String username) {
-		// TODO Auto-generated method stub
-		return null;
+		String response = tcpClient.sendAndReceive(new Request("getStartedGamesWithGamer", username));
+		return fromJson(response);
 	}
+
+
 }

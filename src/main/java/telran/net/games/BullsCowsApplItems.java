@@ -1,5 +1,6 @@
 package telran.net.games;
 
+import telran.net.games.exceptions.GameNotFoundException;
 import telran.net.games.service.BullsCowsService;
 import telran.view.InputOutput;
 import telran.view.Item;
@@ -41,8 +42,8 @@ public class BullsCowsApplItems {
     private static void showMenuGame(InputOutput io) {
         Menu gameMenu = new Menu("Game menu",
                 new Item[]{Item.of("Start Game", item -> startGame(io)),
-                        Item.of("Continue Game",item -> JoinGame(io)),
-                        Item.of("Join Game", item-> continueGame(io)),
+                        Item.of("Continue Game",item -> continueGame(io)),
+                        Item.of("Join Game", item-> joinGame(io)),
                         Item.ofExit()
                 }
         );
@@ -77,11 +78,43 @@ public class BullsCowsApplItems {
     }
 
 
-    private static void JoinGame(InputOutput io) {
-
+    private static void joinGame(InputOutput io) {
+        List<Long> games = service.getNotStartedGamesWithNoGamer(username);
+        if(games.isEmpty()) {
+        	io.writeLine(" Available  no games  ");
+        }else {
+        	io.writeLine(" Available games : ");
+            games.forEach(io::writeLine);
+            gameId =io.readLong("Enter Game Id","Wrong Game Id");
+            checkNotStartedGame(gameId,games);
+            service.gamerJoinGame(gameId, username);
+        }
+        
+        service.startGame(gameId);
+        playGame(io);
     }
 
     private static void continueGame(InputOutput io) {
+       List<Long> games = service.getNotStartedGamesWithGamer(username);
+       if(games.isEmpty()) {
+       	io.writeLine(" Available  no games  ");
+       }else {
+       	io.writeLine(" Available games : ");
+           games.forEach(io::writeLine);
+           gameId =io.readLong("Enter Game Id","Wrong Game Id");
+           checkNotStartedGame(gameId,games);
+           
+       }
+        service.startGame(gameId);
+        playGame(io);
+    }
+
+    private static void checkNotStartedGame( long gameId, List<Long> games) {
+        try {
+            games.contains(gameId);
+        } catch (Exception e) {
+            throw new GameNotFoundException(gameId);
+        }
     }
 
 

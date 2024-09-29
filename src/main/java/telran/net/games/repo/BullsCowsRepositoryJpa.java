@@ -146,7 +146,7 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	}
 	private GameGamer getGameGamer(Long gameId, String username) {
 		TypedQuery<GameGamer> query = em.createQuery(
-						"select username from GameGamer gameGamer"
+						"select gameGamer from GameGamer gameGamer"
 						+ " where game.id = ?1 and gamer.id = ?2", GameGamer.class);
 		GameGamer gameGamer = query.setParameter(1, gameId).setParameter(2, username)
 				.getSingleResultOrNull();
@@ -180,30 +180,21 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	}
 	@Override
 	public List<Long> getNotStartedGamesWithGamer(String username) {
-		return em.createQuery(
-				"select id from Game g where dateTime is null and id in"
-				+ "(select gg.game.id from GameGamer gg where gg.gamer.username = :username)", 
-				Long.class
-				).setParameter("username", username)
-				.getResultList();
-				
-		
+		TypedQuery<Long> query = em.createQuery("select game.id from GameGamer where game.dateTime is null and gamer.id = ?1", Long.class);
+		return query.setParameter(1, username).getResultList();
 	}
+
 	@Override
 	public List<Long> getNotStartedGamesWithNoGamer(String username) {
-		return em.createQuery(
-				"select id from Game g where dateTime is null and id not in"
-				+ "(select gg.game.id from GameGamer gg where gg.gamer.username = :username)", 
-				Long.class
-				).setParameter("username", username)
-				.getResultList();
-		
+		TypedQuery<Long> query = em.createQuery("select distinct id from Game where dateTime is null and id not in (select game.id from GameGamer where gamer.id = ?1)", Long.class);
+		return query.setParameter(1, username).getResultList();
 	}
 	@Override
 	public List<Long> getStartedGamesWithGamer(String username) {
 		return em.createQuery(
-				"select id from Game g where dateTime is null and id  in"
-				+ "(select gg.game.id from GameGamer gg where gg.gamer.username = :username)", 
+				"select game.id from GameGamer  where dateTime is "
+				+ "not  null and  not game.isFinished  and  gamer.id = :username",
+				
 				Long.class
 				).setParameter("username", username)
 				.getResultList();

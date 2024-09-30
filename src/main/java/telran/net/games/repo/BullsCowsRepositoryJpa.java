@@ -193,7 +193,7 @@ public class BullsCowsRepositoryJpa implements BullsCowsRepository {
 	@Override
 	public List<Long> getIdsNonStartedGamesNoGamer(String username) {
 		TypedQuery<Long> query = em.createQuery(
-				"select game.id from Game game left join GameGamer gameGamer "
+				"select distinct game.id from Game game left join GameGamer gameGamer "
 				+ "on gameGamer.game.id = game.id"
 				+ " where gameGamer.game.id is null or (gameGamer.game.dateTime is null "
 				+ "and gameGamer.gamer.username != ?1)", Long.class);

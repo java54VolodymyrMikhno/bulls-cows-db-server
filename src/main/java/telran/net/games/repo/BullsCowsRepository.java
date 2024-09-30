@@ -18,14 +18,14 @@ public interface BullsCowsRepository {
 	boolean isGameFinished(long id);
 	void setIsFinished(long gameId);
 	List<Long> getGameIdsNotStarted();
-	List<Long> getNotStartedGamesWithGamer(String username);
-	List<Long> getNotStartedGamesWithNoGamer(String username);
-	List<Long> getStartedGamesWithGamer(String username);
 	List<String> getGameGamers(long id);
 	void createGameGamer(long gameId, String username);
 	void createGameGamerMove(MoveDto moveDto);
 	List<MoveData> getAllGameGamerMoves(long gameId, String username);
 	void setWinner(long gameId, String username);
 	boolean isWinner(long gameId, String username);
-
+	List<Long> getIdsNonStartedGamesGamer(String username);
+	List<Long> getIdsNonStartedGamesNoGamer(String username);
+	List<Long> getIdsStartedGamesGamer(String username);
+	
 }

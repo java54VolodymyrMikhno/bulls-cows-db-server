@@ -1,11 +1,15 @@
 package telran.net.games.controller;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 
-import telran.net.*;
+import telran.net.Protocol;
+import telran.net.Request;
+import telran.net.Response;
+import telran.net.ResponseCode;
 import telran.net.games.model.*;
 import telran.net.games.service.BullsCowsService;
 public class BullsCowsProtocol implements Protocol {
@@ -27,12 +31,12 @@ public class BullsCowsProtocol implements Protocol {
 			case "registerGamer" -> registerGamer(requestData);
 			case "gamerJoinGame" -> gamerJoinGame(requestData);
 			case "getNotStartedGames" -> getNotStartedGames(requestData);
-			case "getNotStartedGamesWithGamer" -> getNotStartedGamesWithGamer(requestData);
-			case "getNotStartedGamesWithNoGamer" -> getNotStartedGamesWithNoGamer(requestData);
-			case "getStartedGamesWithGamer" -> getStartedGamesWithGamer(requestData);
 			case "moveProcessing" -> moveProcessing(requestData);
 			case "gameOver" -> gameOver(requestData);
 			case "getGameGamers" -> getGameGamers(requestData);
+			case "getNotStartedGamesWithGamer" -> getNotStartedGamesWithGamer(requestData);
+			case "getNotStartedGamesWithOutGamer" -> getNotStartedGamesWithOutGamer(requestData);
+			case "getStartedGamesWithGamer" -> getStartedGamesWithGamer(requestData);
 			case "loginGamer" -> loginGamer(requestData);
 			default -> new Response(ResponseCode.WRONG_REQUEST_TYPE,
 					requestType);
@@ -43,29 +47,6 @@ public class BullsCowsProtocol implements Protocol {
 		}
 		return response;
 	}
-	Response loginGamer(String requestData) {
-		String username = bcService.loginGamer(requestData);
-		return getResponseOk(username);
-	}
-
-	Response getNotStartedGamesWithGamer(String requestData) {
-		List<Long> games = bcService.getNotStartedGamesWithGamer(requestData);
-		String responseString = resultsToJSON(games);
-		return getResponseOk(responseString);
-	}
-
-	Response getNotStartedGamesWithNoGamer(String requestData) {
-		List<Long> games = bcService.getNotStartedGamesWithNoGamer(requestData);
-		String responseString = resultsToJSON(games);
-		return getResponseOk(responseString);
-	}
-
-	Response getStartedGamesWithGamer(String requestData) {
-		List<Long> games = bcService.getStartedGamesWithGamer(requestData);
-		String responseString = resultsToJSON(games);
-		return getResponseOk(responseString);
-	}
-
 	Response createGame(String requestData) {
 		long gameId = bcService.createGame();
 		String responseString = Long.toString(gameId);
@@ -78,8 +59,9 @@ public class BullsCowsProtocol implements Protocol {
 		return getResponseOk(responseString );
 	}
 	Response registerGamer(String requestData) {
-        GamerDto gamer = new GamerDto(new JSONObject(requestData));
-		bcService.registerGamer(gamer.username(),gamer.birthdate());
+		UsernameBirthdate nameDate = new UsernameBirthdate(new JSONObject(requestData));
+		
+		bcService.registerGamer(nameDate.username(), nameDate.birthDate());
 		String responseString = "";
 		return getResponseOk(responseString );
 	}
@@ -90,8 +72,8 @@ public class BullsCowsProtocol implements Protocol {
 		return getResponseOk(responseString );
 	}
 	Response getNotStartedGames(String requestData) {
-		List<Long> notStartedGames = bcService.getNotStartedGames();
-		String responseString = resultsToJSON(notStartedGames);
+		List<Long> ids = bcService.getNotStartedGames();
+		String responseString = resultsToJSON(ids);
 		return getResponseOk(responseString );
 	}
 	Response moveProcessing(String requestData) {
@@ -106,14 +88,38 @@ public class BullsCowsProtocol implements Protocol {
 	}
 	Response gameOver(String requestData) {
 		long gameId = Long.parseLong(requestData);
-		boolean isOver = bcService.gameOver(gameId);
-		String responseString = Boolean.toString(isOver);
+		boolean res = bcService.gameOver(gameId);
+		String responseString = Boolean.toString(res);
 		return getResponseOk(responseString );
 	}
 	Response getGameGamers(String requestData) {
 		long gameId = Long.parseLong(requestData);
-		List<String> getGameGamer =bcService.getGameGamers(gameId);
-		String responseString = resultsToJSON(getGameGamer);
+		List<String> gamers = bcService.getGameGamers(gameId);
+		String responseString = resultsToJSON(gamers);
+		return getResponseOk(responseString );
+	}
+	Response getNotStartedGamesWithGamer(String requestData) {
+		String username = requestData;
+		List<Long> ids = bcService.getNotStartedGamesWithGamer(username);
+		String responseString = resultsToJSON(ids);
+		return getResponseOk(responseString );
+	}
+	Response getNotStartedGamesWithOutGamer(String requestData) {
+		String username = requestData;
+		List<Long> ids = bcService.getNotStartedGamesWithOutGamer(username);
+		String responseString = resultsToJSON(ids);
+		return getResponseOk(responseString );
+	}
+	Response getStartedGamesWithGamer(String requestData) {
+		String username = requestData;
+		List<Long> ids = bcService.getStartedGamesWithGamer(username);
+		String responseString = resultsToJSON(ids);
+		return getResponseOk(responseString );
+	}
+	Response loginGamer(String requestData) {
+		String username = requestData;
+		String usernameFromServer = bcService.loginGamer(username);
+		String responseString = usernameFromServer;
 		return getResponseOk(responseString );
 	}
 
@@ -126,5 +132,4 @@ private <T> String resultsToJSON(List<T> res) {
 		return res.stream().map(T::toString)
 				.collect(Collectors.joining(";"));
 	}
-
 }

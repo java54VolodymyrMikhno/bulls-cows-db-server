@@ -90,16 +90,18 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	 * and the gamer in the game should be set as the winner
 	 * Exceptions:
 	 * IncorrectMoveSequenceException (extends IllegalArgumentException)_
-	 * GameGamerNotFoundException
+	 * GameNotFoundException
+	 * GamerNotFoundException
 	 * GameNotStartedException (extends IllegalStateException)
 	 * GameFinishedException (extends IllegalStateException)
+	 * GameGamerNotFounException
 	 */
 	public List<MoveData> moveProcessing(String moveSequence, long gameId, String username) {
 		
 		if(!bcRunner.checkGuess(moveSequence)) {
 			throw new IncorrectMoveSequenceException(moveSequence, bcRunner.nDigits);
 		}
-		bcRepository.getGamer(username);//only for checking the gamer exists
+		bcRepository.getGamer(username);//only for checking whether the gamer exists
 		if (!bcRepository.isGameStarted(gameId)) {
 			throw new GameNotStartedException(gameId);
 		}
@@ -107,7 +109,7 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 			throw new GameFinishedException(gameId);
 		}
 		
-		String toBeGuessedSequence =getSequence(gameId);
+		String toBeGuessedSequence = getSequence(gameId);
 		MoveData moveData = bcRunner.moveProcessing(moveSequence,
 				toBeGuessedSequence);
 		MoveDto moveDto = new MoveDto(gameId, username, moveSequence,
@@ -156,21 +158,23 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 	}
 	@Override
 	public List<Long> getNotStartedGamesWithGamer(String username) {
-	    return bcRepository.getNotStartedGamesWithGamer(username);
+		bcRepository.getGamer(username);
+		return bcRepository.getIdsNonStartedGamesGamer(username);
 	}
-
 	@Override
-	public List<Long> getNotStartedGamesWithNoGamer(String username) {
-	    return bcRepository.getNotStartedGamesWithNoGamer(username);
+	public List<Long> getNotStartedGamesWithOutGamer(String username) {
+		bcRepository.getGamer(username);
+		return bcRepository.getIdsNonStartedGamesNoGamer(username);
 	}
-
 	@Override
 	public List<Long> getStartedGamesWithGamer(String username) {
-	    return bcRepository.getStartedGamesWithGamer(username);
+		bcRepository.getGamer(username);
+		return bcRepository.getIdsStartedGamesGamer(username);
 	}
 	@Override
 	public String loginGamer(String username) {
 		 Gamer gamer = bcRepository.getGamer(username);
 		return gamer.getUsername();
-}
+	}
+	
 }

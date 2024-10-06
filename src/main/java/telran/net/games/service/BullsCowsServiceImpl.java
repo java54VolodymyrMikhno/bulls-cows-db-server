@@ -176,5 +176,9 @@ public class BullsCowsServiceImpl implements BullsCowsService {
 		 Gamer gamer = bcRepository.getGamer(username);
 		return gamer.getUsername();
 	}
+	@Override
+	public List<MoveData> getGameHistory(long gameId, String username) {
+	    return bcRepository.getAllGameGamerMoves(gameId, username);
+	}
 	
 }

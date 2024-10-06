@@ -38,6 +38,7 @@ public class BullsCowsProtocol implements Protocol {
 			case "getNotStartedGamesWithOutGamer" -> getNotStartedGamesWithOutGamer(requestData);
 			case "getStartedGamesWithGamer" -> getStartedGamesWithGamer(requestData);
 			case "loginGamer" -> loginGamer(requestData);
+			case "getGameHistory" -> getGameHistory(requestData);
 			default -> new Response(ResponseCode.WRONG_REQUEST_TYPE,
 					requestType);
 			};
@@ -121,6 +122,16 @@ public class BullsCowsProtocol implements Protocol {
 		String usernameFromServer = bcService.loginGamer(username);
 		String responseString = usernameFromServer;
 		return getResponseOk(responseString );
+	}
+	Response getGameHistory(String requestData) {
+	    JSONObject jsonObject = new JSONObject(requestData);
+	    long gameId = jsonObject.getLong("gameId");
+	    String username = jsonObject.getString("username");
+
+	    List<MoveData> moves = bcService.getGameHistory(gameId, username);
+	    String responseString = resultsToJSON(moves);
+	    
+	    return getResponseOk(responseString);
 	}
 
 	private Response getResponseOk(String responseString) {

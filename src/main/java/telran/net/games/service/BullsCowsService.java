@@ -18,4 +18,5 @@ List<String> getGameGamers(long gameId);
 List<Long> getNotStartedGamesWithGamer(String username);
 List<Long> getNotStartedGamesWithOutGamer(String username);
 List<Long> getStartedGamesWithGamer(String gamer);
+List<MoveData> getGameHistory(long gameId, String username);
 }
